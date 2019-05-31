@@ -134,8 +134,8 @@ void word_transform(ifstream& map_file, ifstream& input)
 int main()
 {
 	
-	ifstream map_file("C:\\Users\\tailiang\\Documents\\testcpp\\map_file.txt",ios::in);
-	ifstream trans_file("C:\\Users\\tailiang\\Documents\\testcpp\\trans_file.txt",ios::in);
+	ifstream map_file("C:\\Users\\xxx\\Documents\\testcpp\\map_file.txt",ios::in);
+	ifstream trans_file("C:\\Users\\xxx\\Documents\\testcpp\\trans_file.txt",ios::in);
 
 	word_transform(map_file,trans_file);
 	return 0;
