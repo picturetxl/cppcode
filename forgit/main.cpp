@@ -1,13 +1,7 @@
-#include <iostream>
-#include <vector>
-#include <utility>
-#include <set>
-#include <map>
-#include <string>
-#include <fstream>
-#include <sstream>
-using namespace std;
 
+#include "MyHeader.h"
+#include "ClassQueryResult.h"
+#include "ClassTextQuery.h"
 pair<string, int> process(vector<string>& v)
 {
 	if (!v.empty())
@@ -130,13 +124,89 @@ void word_transform(ifstream& map_file, ifstream& input)
 		cout << endl;
 	}
 }
+void testSharedPtrCopy()
+{
 
+	auto p = make_shared<int>(42);//p point to the object of int 
+	auto q(p);//q also point to the object of int
+	auto xp = make_shared<int>(32);
+	p = xp;
+	cout << p.use_count();//2
+	cout << q.use_count();//1
+	cout << xp.use_count();//2
+}
+struct myList {
+	vector<int> v;
+	myList(initializer_list<int> l) :v(l) {};
+	void append(initializer_list<int> l) {
+ 		v.insert(v.end(), l.begin(), l.end());
+	}
+	void traverlist()
+	{
+		for (auto i : v)
+		{
+			cout << i << " ";
+		}
+		
+	}
+};
+void testSmartPointer()
+{
+	shared_ptr<int> sp1(new int(10));
+	shared_ptr<int> sp2(sp1), sp3;
+	sp3 = sp1;
+	//一个典型的错误用法
+	shared_ptr<int> sp4(sp1.get());
+	cout << sp1.use_count() << " " << sp2.use_count() << " "
+		<< sp3.use_count() << " " << sp4.use_count() << endl;
+	//输出 3 3 3 1
+	
+}
+//void testShared()
+//{
+//	int* p = new int(32);
+//	shared_ptr<int> q1(p);
+//	shared_ptr<int> q2(p);
+//	shared_ptr<int> q3(p);
+//	shared_ptr<int> q4(p);
+//	cout << *p << endl;
+//	cout << *q1 << endl;
+//	cout << *q2 << endl;
+//	cout << *q3 << endl;
+//	cout << *q4 << endl;
+//	
+//	cout << q1.use_count() << endl;//1
+//	cout << q2.use_count() << endl;//1
+//	cout << q3.use_count() << endl;//1
+//	cout << q4.use_count() << endl;//1
+//}
+unique_ptr<int> clone_unique_ptr(int p)
+{
+	return unique_ptr<int>(new int(p));
+}
+unique_ptr<int> clone_t(int p)
+{
+	unique_ptr<int> ret(new int(p));
+
+	return ret;
+}
+void runQuery(ifstream& infile)
+{
+	TextQuery tq(infile);
+	while (true)
+	{
+		cout << "enter word to look for , or q to quit";
+		string s;
+		if (!(cin>>s) || s == "q")
+		{
+			break;
+		}
+		print(cout, tq.query(s))<<endl;
+	}
+}
 int main()
 {
-	
-	ifstream map_file("C:\\Users\\xxx\\Documents\\testcpp\\map_file.txt",ios::in);
-	ifstream trans_file("C:\\Users\\xxx\\Documents\\testcpp\\trans_file.txt",ios::in);
-
-	word_transform(map_file,trans_file);
+	ifstream is("C:\\Users\\tailiang\\Documents\\testcpp\\wordquery.txt");
+	runQuery(is);
 	return 0;
 }
